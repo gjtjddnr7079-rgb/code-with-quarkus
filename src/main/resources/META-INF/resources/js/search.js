@@ -8,12 +8,16 @@
 //자바스크립트 코드 검색 폼 
 // ── 챔피언 데이터 ──────────────────────────────────────────────
 const CHAMPIONS = [
+        { name: '조이', engName: 'Zoe', role: '마법사', lane: '미드', img: 'images/Zoe.jpg', difficulty: '상'},
         { name: '아트록스', engName: 'Aatrox', role: '전사', lane: '탑', img: 'images/a1.jpeg', difficulty: '상' },
         { name: '사일러스', engName: 'Sylas', role: '마법사', lane: '정글/미드', img: 'https://ddragon.leagueoflegends.com/cdn/15.24.1/img/champion/Sylas.png', difficulty: '중' },
         { name: '애니비아', engName: 'Anivia', role: '마법사', lane: '미드', img: 'https://ddragon.leagueoflegends.com/cdn/15.24.1/img/champion/Anivia.png', difficulty: '상' },
         { name: '브라이어', engName: 'Briar', role: '전사', lane: '정글', img: 'https://ddragon.leagueoflegends.com/cdn/15.24.1/img/champion/Briar.png', difficulty: '중' },
         { name: '잭스', engName: 'Jax', role: '전사', lane: '탑', img: 'https://ddragon.leagueoflegends.com/cdn/15.24.1/img/champion/Jax.png', difficulty: '하' },
         { name: '징크스', engName: 'Jinx', role: '원거리딜러', lane: '원딜', img: 'https://ddragon.leagueoflegends.com/cdn/15.24.1/img/champion/Jinx.png', difficulty: '중' },
+        { name: '르블랑', engName: 'Leblanc', role: '마법사', lane: '미드', img: 'images/Leblanc_0.jpg', difficulty: '상'},
+        { name: '야스오', engName: 'Yasuo', role: '전사', lane: '미드', img: 'images/Yasuo.jpg', difficulty: '상'},
+        { name: '이즈리얼', engName: 'Ezreal', role: '원거리딜러', lane: '바텀', img: 'https://ddragon.leagueoflegends.com/cdn/15.24.1/img/champion/Ezreal.png', difficulty: '상'},
 ];
 // ── 뉴스 데이터 ──────────────────────────────────────────────
 const NEWS = [
@@ -23,7 +27,10 @@ const NEWS = [
 // ── 검색 실행 ────────────────────────────────────────────────
 function performSearch(query) {
 const q = query.trim().toLowerCase(); // 앞 뒤 공백제거, 소문자 변환
-if (!q) return;
+if (!q) {
+    showMainScreen();
+    return;
+}
 document.getElementById('searchKeywordDisplay').textContent = `"${query}"`; // 검색어 인식
 // 챔피온 데이터에서 이름, 영문명, 역할군, 라인 중 하나라도 검색어에 포함되면
 const champResults = CHAMPIONS.filter(c =>
@@ -70,6 +77,27 @@ document.querySelector('.hero').classList.add('d-none'); // 히어로 섹션 숨
 document.querySelectorAll('section:not(#searchResults)').forEach(s => s.classList.add('d-none')); // 나머지 섹션 숨김
 document.getElementById('searchResults').classList.remove('d-none'); // 기타 섹션까지 숨김
 document.getElementById('searchResults').style.display = 'block'; // 결과 섹션만 출력
+}
+// — 메인화면 복귀 함수 —
+function showMainScreen() {
+    // 1. 검색 결과 섹션을 숨김
+    const searchResults = document.getElementById('searchResults');
+    searchResults.classList.add('d-none');
+    searchResults.style.display = 'none';
+
+    // 2. 숨겨졌던 hero 섹션을 다시 보여줌
+    document.querySelector('.hero').classList.remove('d-none');
+
+    // 3. 나머지 모든 section들을 돌면서 다시 보여줌
+    // (searchResults가 아닌 section들만 골라서 d-none을 제거)
+    document.querySelectorAll('section').forEach(s => {
+        if (s.id !== 'searchResults') {
+            s.classList.remove('d-none');
+        }
+    });
+
+    // 4. 검색창에 입력되어 있던 글자를 지워
+    document.getElementById('searchInput').value = '';
 }
 
 // ── 카테고리 전환 ────────────────────────────────────────────
