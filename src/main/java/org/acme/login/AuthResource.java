@@ -13,6 +13,21 @@ import io.vertx.ext.web.RoutingContext;
 @Path("/")
 public class AuthResource {
 
+    // GET / → 세션 유무에 따라 메인 페이지 분기
+    @GET
+    @Produces(MediaType.TEXT_HTML)
+    public Response mainPage() {
+        String loginUser = context.session().get("loginUser");
+        System.out.println("=== [GET /] 세션 ID : " +
+                context.session().id());
+        System.out.println("=== [GET /] loginUser : " + loginUser);
+        String htmlPath = (loginUser != null)
+                ? "META-INF/resources/login/main_after_login.html"
+                : "META-INF/resources/main_index.html";
+        InputStream html = getClass().getClassLoader().getResourceAsStream(htmlPath);
+        return Response.ok(html).build();
+    }
+
     @Inject
     RoutingContext context; // 세션 접근
 
@@ -139,15 +154,14 @@ public class AuthResource {
     }
 
     @GET
-@Path("/register_success")
-@Produces(MediaType.TEXT_HTML)
-public Response registerSuccess() {
-InputStream html = getClass()
-.getClassLoader()
-.getResourceAsStream(
-"META-INF/resources/login/register_success.html");
-return Response.ok(html).build();
-}
-
+    @Path("/register_success")
+    @Produces(MediaType.TEXT_HTML)
+    public Response registerSuccess() {
+        InputStream html = getClass()
+                .getClassLoader()
+                .getResourceAsStream(
+                        "META-INF/resources/login/register_success.html");
+        return Response.ok(html).build();
+    }
 
 }
